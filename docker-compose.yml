@@ -7,6 +7,9 @@ services:
     volumes:
       - .:/workdir
     working_dir: /workdir
+
+    # Fix slow shutdown of web container
+    init: true
     # INFO: Following two lines are necessary for the backtrace by pdb
     stdin_open: true
     tty: true

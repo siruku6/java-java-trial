@@ -1,0 +1,12 @@
+version: '3'
+services:
+  java:
+    image: eclipse-temurin:22-ubi9-minimal
+    environment:
+      - TZ=Asia/Tokyo
+    volumes:
+      - .:/workdir
+    working_dir: /workdir
+    # INFO: Following two lines are necessary for the backtrace by pdb
+    stdin_open: true
+    tty: true

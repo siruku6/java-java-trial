@@ -12,7 +12,7 @@ public abstract class Person {
     protected Integer personId;
     protected String name;
     protected Workplace workplace;
-    protected Computer computer;
+    public Computer computer;
 
     public Person(Workplace workplace, String name) {
         this.workplace = workplace;
@@ -44,18 +44,18 @@ public abstract class Person {
         this.computer.showRepositories();
     }
 
-    public void viewFiles(int repositoryId) {
-        this.computer.showFiles(repositoryId);
-    }
+    // public void viewFiles(int repositoryId) {
+    //     this.computer.showFiles(repositoryId);
+    // }
 
     public String createFile(Integer repositoryId, String content) {
-        String fileId = this.computer.createFile(repositoryId, content);
+        String fileId = this.computer.createFile(repositoryId, this.personId, content);
         System.out.println("File (" + fileId + ") is created.");
         return fileId;
     }
 
-    public void pushFile(Integer repositoryId, String fileId) {
-        this.computer.pushFile(repositoryId, fileId);
+    public void pushFile(RemoteServer remoteServer, Integer repositoryId, String fileId) {
+        this.computer.pushFile(remoteServer, repositoryId, fileId);
     }
 
     public void pullRepository(RemoteServer remoteServer, Integer repositoryId) {
@@ -68,7 +68,9 @@ public abstract class Person {
         );
     }
 
-    public abstract void approveFile(Integer repositoryId, Integer fileId);
+    public abstract int approveFile(
+        RemoteServer remoteServer, Integer repositoryId, String fileId
+    );
 
     public void quitWorkplace() {
         this.turnOffComputer();

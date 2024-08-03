@@ -4,6 +4,7 @@ import java.util.List;
 
 import machine.Machine;
 import repository.Repository;
+import repository.File;
 
 
 public class RemoteServer implements Machine {
@@ -42,7 +43,7 @@ public class RemoteServer implements Machine {
         }
     }
 
-    private Repository searchRepository(Integer repositoryId) {
+    private Repository findRepository(Integer repositoryId) {
         this.checkPowerOn();
 
         // Search repository having the same repositoryId
@@ -58,8 +59,14 @@ public class RemoteServer implements Machine {
         this.checkPowerOn();
     }
 
-    public void addFile(Integer repositoryId) {
+    public void addFile(Integer repositoryId, File file) {
         this.checkPowerOn();
+
+        Repository repository = this.findRepository(repositoryId);
+        repository.addFile(file);
+        System.out.println(
+            "File (" + file.fileId + ") is successfully added to Repository (" + repositoryId + ")"
+        );
     }
 
     public void addRepository(Repository repository) {
@@ -80,7 +87,7 @@ public class RemoteServer implements Machine {
         Repository repository = null;
         try {
             // Search repository having the same repositoryId
-            repository = this.searchRepository(repositoryId);
+            repository = this.findRepository(repositoryId);
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Repository not found:" + Integer.toString(repositoryId));
             return null;
@@ -91,7 +98,13 @@ public class RemoteServer implements Machine {
         return clonedRepository;
     }
 
-    public void approveFile(Integer repositoryId, Integer fileId, Integer approverId) {
+    public int approveFile(
+        Integer repositoryId, String fileId, Integer approverId
+    ) {
         this.checkPowerOn();
+        Repository repository = this.findRepository(repositoryId);
+
+        int approvalId = repository.execApproval(fileId, approverId);
+        return approvalId;
     }
 }

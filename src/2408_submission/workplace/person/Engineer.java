@@ -1,5 +1,6 @@
 package workplace.person;
 
+import machine.RemoteServer;
 import workplace.Workplace;
 
 public class Engineer extends Person {
@@ -8,6 +9,11 @@ public class Engineer extends Person {
     }
 
     @Override
-    public void approveFile(Integer repositoryId, Integer fileId) {
-    }
+    public int approveFile(
+        RemoteServer remoteServer, Integer repositoryId, String fileId
+    ) {
+        System.out.println("You don't have permission to approve files.");
+
+        return -1;
+    };
 }

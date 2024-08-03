@@ -128,24 +128,37 @@ public class Computer implements Machine {
         repository.showFiles();
     }
 
-    public String createFile(Integer repositoryId, String content) {
+    public String createFile(Integer repositoryId, int personId, String content) {
         this.checkPowerOn();
         Repository repository = findRepository(repositoryId);
         if (Objects.isNull(repository)) {
             throw new RuntimeException("File can't be created.");
         }
 
-        File file = new File(content);
+        File file = new File(personId, content);
         repository.addFile(file);
         return file.fileId;
     }
 
-    public void pushFile(Integer repositoryId, String fileId) {
+    public void pushFile(RemoteServer remoteServer, Integer repositoryId, String fileId) {
         this.checkPowerOn();
-        System.out.println("File (" + fileId +") is pushed to repository: " + repositoryId);
+        // System.out.println("File (" + fileId +") is pushed to repository: " + repositoryId);
+
+        Repository repository = findRepository(repositoryId);
+        if (Objects.isNull(repository)) {
+            throw new RuntimeException("File can't be pushed.");
+        }
+
+        File file = repository.findFile(fileId);
+        remoteServer.addFile(repositoryId, file);
     }
 
-    public void approveFile(Integer repositoryId, Integer fileId, Integer approverId) {
+    public int approveFile(
+        RemoteServer remoteServer, Integer repositoryId, String fileId, Integer approverId
+    ) {
         this.checkPowerOn();
+
+        int approvalId = remoteServer.approveFile(repositoryId, fileId, approverId);
+        return approvalId;
     }
 }

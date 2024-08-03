@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class File {
     public String fileId;
+    public int authorId;
     public String content;
     public String status = "not_exist";
 
@@ -37,14 +38,16 @@ public class File {
         }
     }
 
-    public File(String content) {
+    public File(int authorId, String content) {
         this.fileId = this.generateNewFileId();
+        this.authorId = authorId;
         this.content = content;
         this.status = "created";
     }
 
-    public File(String id, String content, String status) {
+    public File(String id, int authorId, String content, String status) {
         this.fileId = id;
+        this.authorId = authorId;
         this.content = content;
         this.status = status;
     }
@@ -64,8 +67,7 @@ public class File {
         try {
             file = (File) super.clone();
         } catch (CloneNotSupportedException e) {
-            file = new File(
-            this.fileId, this.content, this.status);
+            file = new File(this.fileId, this.authorId, this.content, this.status);
         }
         return file;
     }

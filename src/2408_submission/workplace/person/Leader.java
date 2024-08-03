@@ -13,7 +13,13 @@ public class Leader extends Person {
     }
 
     @Override
-    public void approveFile(Integer repositoryId, Integer fileId) {
+    public int approveFile(
+        RemoteServer remoteServer, Integer repositoryId, String fileId
+    ) {
+        int approvalId = this.computer.approveFile(
+            remoteServer, repositoryId, fileId, this.personId
+        );
+        return approvalId;
     }
 
     public Integer makeRepository() {
@@ -23,8 +29,5 @@ public class Leader extends Person {
 
     public void pushRepository(RemoteServer remoteServer, Integer repositoryId) {
         this.computer.pushRepository(remoteServer, repositoryId);
-    }
-
-    public void reviewFiles() {
     }
 }

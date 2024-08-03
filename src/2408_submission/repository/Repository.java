@@ -3,6 +3,8 @@ package repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import repository.ApprovalHistory;
+
 
 public class Repository {
     private static int repositoryIdCounter = 0;
@@ -27,6 +29,13 @@ public class Repository {
         return this.files;
     }
 
+    public File findFile(String fileId) {
+        return this.files
+            .stream()
+            .filter(f -> f.fileId.equals(fileId))
+            .findFirst().get();
+    }
+
     public void showFiles() {
         int fileCounter = 0;
 
@@ -45,8 +54,6 @@ public class Repository {
         for (File file : this.files) {
             clone.addFile(file.clone());
         }
-
-        System.out.println("The type of cloned files: " + clone.getFiles().getClass().getSimpleName());
 
         if (onlyApproved) {
             // extract only approved files
@@ -80,7 +87,23 @@ public class Repository {
         }
     }
 
-    public void addApprovalHistory(ApprovalHistory approvalHistory) {
+    public int execApproval(String fileId, int approverId) {
+        // System.out.println("All files in the repository:");
+        // this.showFiles();
+
+        // search file from fileId
+        File file = this.files
+            .stream()
+            .filter(f -> f.fileId.equals(fileId))
+            .findFirst().get();
+
+        file.updateStatus("approved");
+
+        ApprovalHistory approvalHistory = new ApprovalHistory(
+            approverId, file.authorId, fileId
+        );
         this.approvalHistories.add(approvalHistory);
+
+        return approvalHistory.getHistoryId();
     }
 }

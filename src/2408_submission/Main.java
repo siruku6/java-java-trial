@@ -21,33 +21,50 @@ public class Main {
         // David quit workplace.
         david.quitWorkplace();
 
-        System.out.println("\n---------------- Worker(2) add Files. ---------------");
+        System.out.println("\n---------------- Worker(2) add a File. ---------------");
         Engineer amy = new Engineer(shinagawa, "amy");
         amy.pullRepository(remoteServer, repositoryId);
         amy.showRepositories();
 
-        String fileId = amy.createFile(repositoryId, "[Fair Copy] lorem ipsum ...");
-        amy.viewFiles(repositoryId);
-        amy.pushFile(repositoryId, fileId);
+        String amyFileId = amy.createFile(repositoryId, "[Fair Copy] lorem ipsum ...");
+        amy.computer.showFiles(repositoryId);
+        amy.pushFile(remoteServer, repositoryId, amyFileId);
 
         // Draft file isn't pushed to the remote server..
-        fileId = amy.createFile(repositoryId, "[Draft] hoge huga ...");
-        amy.viewFiles(repositoryId);
+        String draftFileId = amy.createFile(repositoryId, "[Draft] hoge huga ...");
+        amy.computer.showFiles(repositoryId);
 
-        System.out.println("\n---------------- Worker(3) add other Files. ---------------");
+        System.out.println("\n---------------- Worker(3) add another File. ---------------");
         Engineer boby = new Engineer(shinagawa, "boby");
         boby.pullRepository(remoteServer, repositoryId);
-        // Only pushed files cannot be seen by other workers. 
-        boby.viewFiles(repositoryId);
+        // Just pushed files cannot be seen by other workers.
+        boby.computer.showFiles(repositoryId);
 
-        fileId = boby.createFile(repositoryId, "[Fair Copy] Hi, you guys! ...");
-        boby.pushFile(repositoryId, fileId);
+        String bobyFileId1 = boby.createFile(repositoryId, "[Fair Copy] Hi, you guys! ...");
+        String bobyFileId2 = boby.createFile(repositoryId, "[Fair Copy] Crushing an apple! ...");
+        boby.computer.showFiles(repositoryId);
+        boby.pushFile(remoteServer, repositoryId, bobyFileId1);
+        boby.pushFile(remoteServer, repositoryId, bobyFileId2);
 
         // Boby quit workplace.
         boby.quitWorkplace();
 
-        System.out.println("\n---------------- Leader(4) approves file. ---------------");
+        System.out.println("\n---------------- Leader(4) approves the files. ---------------");
         Leader cachy = new Leader(shinagawa, "cachy");
         cachy.pullRepository(remoteServer, repositoryId);
+        // She can't see the files which are not approved.
+        cachy.computer.showFiles(repositoryId);
+
+        // Approve the files.
+        cachy.approveFile(remoteServer, repositoryId, amyFileId);
+        cachy.approveFile(remoteServer, repositoryId, bobyFileId1);
+
+        // She can't see the file now yet.
+        cachy.computer.showFiles(repositoryId);
+
+        // After approval and pulling, she can see the file.
+        cachy.pullRepository(remoteServer, repositoryId);
+        cachy.computer.showFiles(repositoryId);
+
     }
 }

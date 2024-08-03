@@ -117,6 +117,17 @@ public class Computer implements Machine {
         System.out.println("Repositories: " + this.repositories);
     }
 
+    public void showFiles(int repositoryId) {
+        this.checkPowerOn();
+
+        Repository repository = findRepository(repositoryId);
+        if (Objects.isNull(repository)) {
+            throw new RuntimeException("Files can't be viewed.");
+        }
+
+        repository.showFiles();
+    }
+
     public String createFile(Integer repositoryId, String content) {
         this.checkPowerOn();
         Repository repository = findRepository(repositoryId);

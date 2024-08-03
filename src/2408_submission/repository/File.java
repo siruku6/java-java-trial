@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class File {
     public String fileId;
     public String content;
-    private String status = "not_exist";
+    public String status = "not_exist";
 
     private String generateNewFileId() {
 

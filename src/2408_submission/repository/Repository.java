@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Repository {
@@ -26,6 +27,18 @@ public class Repository {
         return this.files;
     }
 
+    public void showFiles() {
+        int fileCounter = 0;
+
+        // Display the number of files at first.
+        System.out.println("Number of files: " + this.files.size());
+        for (File file : this.files) {
+            fileCounter++;
+
+            System.out.println(fileCounter + ": " + file.content);
+        }
+    }
+
     public Repository returnClone(boolean onlyApproved) {
         Repository clone = new Repository();
         clone.repositoryId = this.repositoryId;
@@ -33,18 +46,18 @@ public class Repository {
             clone.addFile(file.clone());
         }
 
-        System.out.println("The type of cloned files" + clone.getFiles().getClass().getSimpleName());
+        System.out.println("The type of cloned files: " + clone.getFiles().getClass().getSimpleName());
 
-
-        // if (onlyApproved) {
-        //     clone.files = clone
-        //         .getFiles()
-        //         .stream()
-        //         .filter(f -> f.status.equals("approved"));
-        // }
+        if (onlyApproved) {
+            // extract only approved files
+            clone.files = clone
+                .getFiles()
+                .stream()
+                .filter(f -> f.status.equals("approved"))
+                .collect(Collectors.toList());
+        }
         return clone;
     }
-
 
     public void addFile(File file) {
         this.files.add(file);

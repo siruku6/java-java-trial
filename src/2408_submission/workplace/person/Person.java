@@ -44,6 +44,10 @@ public abstract class Person {
         this.computer.showRepositories();
     }
 
+    public void viewFiles(int repositoryId) {
+        this.computer.showFiles(repositoryId);
+    }
+
     public String createFile(Integer repositoryId, String content) {
         String fileId = this.computer.createFile(repositoryId, content);
         System.out.println("File (" + fileId + ") is created.");

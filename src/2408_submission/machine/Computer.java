@@ -54,11 +54,10 @@ public class Computer implements Machine {
                 .findFirst().get()
             );
         } catch (NoSuchElementException e) {
-            // throw new RuntimeException
-            System.out.println(
-                "Repository (" + repositoryId + ") is not found "
-                + "in Computer (" + this.computerId + ")."
-            );
+            // System.out.println(
+            //     "Repository (" + repositoryId + ") is not found "
+            //     + "in Computer (" + this.computerId + ")."
+            // );
             return null;
         }
     }
@@ -86,10 +85,7 @@ public class Computer implements Machine {
     public void pullRepository(RemoteServer remoteServer, Integer repositoryId) {
         this.checkPowerOn();
 
-        // find repository from local repositories
-        Repository localRepository = findRepository(repositoryId);
         Repository remoteRepository = remoteServer.returnRepository(repositoryId);
-
         if (Objects.isNull(remoteRepository)) {
             throw new RuntimeException(
                 "Repository (" + repositoryId + ") couldn't be pulled! "
@@ -97,8 +93,10 @@ public class Computer implements Machine {
             );
         }
 
-        System.out.println("Repository (" + remoteRepository + ") is pulled from remote server.");
+        // System.out.println("Repository (" + remoteRepository + ") is pulled from remote server.");
 
+        // find repository from local repositories
+        Repository localRepository = findRepository(repositoryId);
         // merge remote repository to local repository
         if (Objects.isNull(localRepository)) {
             this.repositories.add(remoteRepository);
@@ -110,6 +108,11 @@ public class Computer implements Machine {
                 localRepository
             );
         }
+
+        System.out.println(
+            "Pulling Repository (" + repositoryId + ") finished successfully,\n"
+            + "  and Repository (" + remoteRepository + ") is pulled in Computer (" + this.getComputerId() + ")!"
+        );
     }
 
     public void showRepositories() {

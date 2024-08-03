@@ -44,7 +44,9 @@ public class Repository {
         for (File file : this.files) {
             fileCounter++;
 
-            System.out.println(fileCounter + ": " + file.content);
+            System.out.println(
+                "  " + fileCounter+ "(" + file.status + "): " + file.content
+            );
         }
     }
 

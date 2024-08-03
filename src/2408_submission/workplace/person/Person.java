@@ -44,10 +44,6 @@ public abstract class Person {
         this.computer.showRepositories();
     }
 
-    // public void viewFiles(int repositoryId) {
-    //     this.computer.showFiles(repositoryId);
-    // }
-
     public String createFile(Integer repositoryId, String content) {
         String fileId = this.computer.createFile(repositoryId, this.personId, content);
         System.out.println("File (" + fileId + ") is created.");
@@ -61,10 +57,6 @@ public abstract class Person {
     public void pullRepository(RemoteServer remoteServer, Integer repositoryId) {
         this.computer.pullRepository(
             remoteServer, repositoryId
-        );
-        System.out.println(
-            "Pulling (" + repositoryId + ") finished successfully, "
-            + "and Repository (" + repositoryId + ") is pulled in Computer (" + this.computer.getComputerId() + ")!"
         );
     }
 

@@ -54,7 +54,9 @@ public class File {
 
     public void updateStatus(String newStatus) {
         // validate newStatus
-        List<String> validStatuses = Arrays.asList("created", "approved", "logical_deleted");
+        List<String> validStatuses = Arrays.asList(
+            "created", "approved", "logical_deleted", "deletion_approved"
+        );
         if (!validStatuses.contains(newStatus)) {
             throw new IllegalArgumentException("Invalid status: " + newStatus);
         }

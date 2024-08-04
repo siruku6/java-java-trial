@@ -7,12 +7,19 @@ public class ApprovalHistory {
     private Integer approverId;
     private Integer authorId;
     private String approvedFileId;
+    private String approvedAction;
 
-    public ApprovalHistory(Integer approverId, Integer authorId, String approvedFileId) {
+    public ApprovalHistory(
+        Integer approverId,
+        Integer authorId,
+        String approvedFileId,
+        String approvedAction
+    ) {
         this.historyId = historyIdCounter;
         this.approverId = approverId;
         this.authorId = authorId;
         this.approvedFileId = approvedFileId;
+        this.approvedAction = approvedAction;
     }
 
     public int getHistoryId() {

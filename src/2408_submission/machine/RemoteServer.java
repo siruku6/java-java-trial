@@ -59,13 +59,14 @@ public class RemoteServer implements Machine {
         this.checkPowerOn();
     }
 
-    public void addFile(Integer repositoryId, File file) {
+    public void pushFile(Integer repositoryId, File clonedFile) {
         this.checkPowerOn();
 
         Repository repository = this.findRepository(repositoryId);
-        repository.addFile(file);
+        repository.pushFile(clonedFile);
+
         System.out.println(
-            "File (" + file.fileId + ") is successfully added to Repository (" + repositoryId + ")"
+            "File (" + clonedFile.fileId + ") is successfully pushed to Repository (" + repositoryId + ")"
         );
     }
 
@@ -104,7 +105,7 @@ public class RemoteServer implements Machine {
         this.checkPowerOn();
         Repository repository = this.findRepository(repositoryId);
 
-        int approvalId = repository.execApproval(fileId, approverId);
+        int approvalId = repository.approve(fileId, approverId);
         return approvalId;
     }
 }

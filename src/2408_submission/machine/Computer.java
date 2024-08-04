@@ -13,7 +13,6 @@ public class Computer implements Machine {
     private Integer computerId;
     private List<Repository> repositories;
     private Boolean powerOn;
-    // private List<RemoteServer> remoteServerList;
 
     public Computer(Integer Id) {
         this.powerOn = false;
@@ -28,7 +27,6 @@ public class Computer implements Machine {
     @Override
     public void turnOn() {
         this.powerOn = true;
-        // System.out.println("Computer is started!");
     }
 
     @Override
@@ -93,8 +91,6 @@ public class Computer implements Machine {
             );
         }
 
-        // System.out.println("Repository (" + remoteRepository + ") is pulled from remote server.");
-
         // find repository from local repositories
         Repository localRepository = findRepository(repositoryId);
         // merge remote repository to local repository
@@ -120,7 +116,7 @@ public class Computer implements Machine {
         System.out.println("Repositories: " + this.repositories);
     }
 
-    public void showFiles(int repositoryId) {
+    public void showFileHistory(int repositoryId) {
         this.checkPowerOn();
 
         Repository repository = findRepository(repositoryId);
@@ -128,7 +124,8 @@ public class Computer implements Machine {
             throw new RuntimeException("Files can't be viewed.");
         }
 
-        repository.showFiles();
+        System.out.println("On the computer: " + this.computerId);
+        repository.showFileHistory();
     }
 
     public String createFile(Integer repositoryId, int personId, String content) {
@@ -156,7 +153,6 @@ public class Computer implements Machine {
 
     public void pushFile(RemoteServer remoteServer, Integer repositoryId, String fileId) {
         this.checkPowerOn();
-        // System.out.println("File (" + fileId +") is pushed to repository: " + repositoryId);
 
         Repository repository = findRepository(repositoryId);
         if (Objects.isNull(repository)) {
@@ -164,7 +160,7 @@ public class Computer implements Machine {
         }
 
         File file = repository.findFile(fileId);
-        remoteServer.addFile(repositoryId, file);
+        remoteServer.pushFile(repositoryId, file.clone());
     }
 
     public int approveFile(

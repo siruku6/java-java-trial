@@ -66,5 +66,14 @@ public class Main {
         cachy.pullRepository(remoteServer, repositoryId);
         cachy.computer.showFiles(repositoryId);
 
+        System.out.println("\n---------------- Worker(5) create and delete the same file. ---------------");
+        Engineer daniel = new Engineer(shinagawa, "daniel");
+        daniel.pullRepository(remoteServer, repositoryId);
+        String danielFileId = daniel.createFile(repositoryId, "[Fair Copy] How bland Java is! ...");
+        daniel.computer.showFiles(repositoryId);
+
+        // Daniel delete the file on his local machine.
+        daniel.deleteFile(repositoryId, danielFileId);
+        daniel.computer.showFiles(repositoryId);
     }
 }

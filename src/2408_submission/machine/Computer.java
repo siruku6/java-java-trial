@@ -143,6 +143,17 @@ public class Computer implements Machine {
         return file.fileId;
     }
 
+    public void deleteFile(Integer repositoryId, String fileId) {
+        this.checkPowerOn();
+        Repository repository = findRepository(repositoryId);
+        if (Objects.isNull(repository)) {
+            throw new RuntimeException("File can't be deleted.");
+        }
+
+        File file = repository.findFile(fileId);
+        repository.removeFile(file);
+    }
+
     public void pushFile(RemoteServer remoteServer, Integer repositoryId, String fileId) {
         this.checkPowerOn();
         // System.out.println("File (" + fileId +") is pushed to repository: " + repositoryId);

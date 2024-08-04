@@ -39,8 +39,14 @@ public class Repository {
     public void showFiles() {
         int fileCounter = 0;
 
+        // Omit logical_deleted files from the list
+        List<File> existFiles = this.files
+            .stream()
+            .filter(f -> !f.status.equals("logical_deleted"))
+            .collect(Collectors.toList());
+
         // Display the number of files at first.
-        System.out.println("Number of files: " + this.files.size());
+        System.out.println("Number of files: " + existFiles.size());
         for (File file : this.files) {
             fileCounter++;
 
@@ -73,7 +79,11 @@ public class Repository {
     }
 
     public void removeFile(File file) {
-        this.files.remove(file);
+        if (file.status.equals("approved")) {
+            file.updateStatus("logical_deleted");
+        } else {
+            this.files.remove(file);
+        }
     }
 
     public void merge(Repository anotherRepository) {

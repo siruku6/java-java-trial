@@ -50,9 +50,15 @@ public abstract class Person {
         return fileId;
     }
 
+    public void deleteFile(Integer repositoryId, String fileId) {
+        this.computer.deleteFile(repositoryId, fileId);
+        System.out.println("File (" + fileId + ") is deleted.");
+    }
+
     public void pushFile(RemoteServer remoteServer, Integer repositoryId, String fileId) {
         this.computer.pushFile(remoteServer, repositoryId, fileId);
     }
+
 
     public void pullRepository(RemoteServer remoteServer, Integer repositoryId) {
         this.computer.pullRepository(

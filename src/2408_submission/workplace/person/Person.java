@@ -50,13 +50,13 @@ public abstract class Person {
         return fileId;
     }
 
-    public void deleteFile(Integer repositoryId, String fileId) {
-        this.computer.deleteFile(repositoryId, fileId);
+    public void delete(Integer repositoryId, String fileId) {
+        this.computer.delete(repositoryId, fileId);
         System.out.println("File (" + fileId + ") is deleted.");
     }
 
-    public void pushFile(RemoteServer remoteServer, Integer repositoryId, String fileId) {
-        this.computer.pushFile(remoteServer, repositoryId, fileId);
+    public void push(RemoteServer remoteServer, Integer repositoryId, String fileId) {
+        this.computer.push(remoteServer, repositoryId, fileId);
     }
 
 
@@ -66,7 +66,7 @@ public abstract class Person {
         );
     }
 
-    public abstract int approveFile(
+    public abstract int approve(
         RemoteServer remoteServer, Integer repositoryId, String fileId
     );
 

@@ -27,7 +27,7 @@ public class Main {
 
         String amyFileId = amy.createFile(repositoryId, "[Fair Copy] lorem ipsum ...");
         amy.computer.showFileHistory(repositoryId);
-        amy.pushFile(remoteServer, repositoryId, amyFileId);
+        amy.push(remoteServer, repositoryId, amyFileId);
 
         // Draft file isn't pushed to the remote server..
         String draftFileId = amy.createFile(repositoryId, "[Draft] hoge huga ...");
@@ -42,8 +42,8 @@ public class Main {
         String bobyFileId1 = boby.createFile(repositoryId, "[Fair Copy] Hi, you guys! ...");
         String bobyFileId2 = boby.createFile(repositoryId, "[Fair Copy] Crushing an apple! ...");
         boby.computer.showFileHistory(repositoryId);
-        boby.pushFile(remoteServer, repositoryId, bobyFileId1);
-        boby.pushFile(remoteServer, repositoryId, bobyFileId2);
+        boby.push(remoteServer, repositoryId, bobyFileId1);
+        boby.push(remoteServer, repositoryId, bobyFileId2);
 
         // Boby quit workplace.
         boby.quitWorkplace();
@@ -55,8 +55,8 @@ public class Main {
         cachy.computer.showFileHistory(repositoryId);
 
         // Approve the files.
-        cachy.approveFile(remoteServer, repositoryId, amyFileId);
-        cachy.approveFile(remoteServer, repositoryId, bobyFileId1);
+        cachy.approve(remoteServer, repositoryId, amyFileId);
+        cachy.approve(remoteServer, repositoryId, bobyFileId1);
 
         // She can't see the file now yet.
         cachy.computer.showFileHistory(repositoryId);
@@ -72,19 +72,19 @@ public class Main {
         daniel.computer.showFileHistory(repositoryId);
 
         // Daniel delete the file on his local machine.
-        daniel.deleteFile(repositoryId, danielFileId);
+        daniel.delete(repositoryId, danielFileId);
         daniel.computer.showFileHistory(repositoryId);
 
         System.out.println("\n---------------- Worker(5) and Leader(4) delete the approved file from the remote repository. ---------------");
         // Daniel delete the file on his local machine which already approved.
-        daniel.deleteFile(repositoryId, amyFileId);
+        daniel.delete(repositoryId, amyFileId);
         daniel.computer.showFileHistory(repositoryId);
 
         // Daniel push the deletion of the file to the remote server.
-        daniel.pushFile(remoteServer, repositoryId, amyFileId);
+        daniel.push(remoteServer, repositoryId, amyFileId);
 
         // Approve the deletion of the file.
-        cachy.approveFile(remoteServer, repositoryId, amyFileId);
+        cachy.approve(remoteServer, repositoryId, amyFileId);
 
         // She can still see the logically deleted file.
         cachy.computer.showFileHistory(repositoryId);

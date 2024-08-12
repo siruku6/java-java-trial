@@ -9,7 +9,7 @@ public class Engineer extends Person {
     }
 
     @Override
-    public int approveFile(
+    public int approve(
         RemoteServer remoteServer, Integer repositoryId, String fileId
     ) {
         System.out.println("You don't have permission to approve files.");

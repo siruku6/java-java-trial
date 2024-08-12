@@ -83,7 +83,7 @@ public class Computer implements Machine {
     public void pullRepository(RemoteServer remoteServer, Integer repositoryId) {
         this.checkPowerOn();
 
-        Repository remoteRepository = remoteServer.returnRepository(repositoryId);
+        Repository remoteRepository = remoteServer.pullRepository(repositoryId);
         if (Objects.isNull(remoteRepository)) {
             throw new RuntimeException(
                 "Repository (" + repositoryId + ") couldn't be pulled! "
@@ -137,10 +137,10 @@ public class Computer implements Machine {
 
         File file = new File(personId, content);
         repository.addFile(file);
-        return file.fileId;
+        return file.getFileId();
     }
 
-    public void deleteFile(Integer repositoryId, String fileId) {
+    public void delete(Integer repositoryId, String fileId) {
         this.checkPowerOn();
         Repository repository = findRepository(repositoryId);
         if (Objects.isNull(repository)) {
@@ -151,7 +151,7 @@ public class Computer implements Machine {
         repository.removeFile(file);
     }
 
-    public void pushFile(RemoteServer remoteServer, Integer repositoryId, String fileId) {
+    public void push(RemoteServer remoteServer, Integer repositoryId, String fileId) {
         this.checkPowerOn();
 
         Repository repository = findRepository(repositoryId);
@@ -160,15 +160,15 @@ public class Computer implements Machine {
         }
 
         File file = repository.findFile(fileId);
-        remoteServer.pushFile(repositoryId, file.clone());
+        remoteServer.push(repositoryId, file.clone());
     }
 
-    public int approveFile(
+    public int approve(
         RemoteServer remoteServer, Integer repositoryId, String fileId, Integer approverId
     ) {
         this.checkPowerOn();
 
-        int approvalId = remoteServer.approveFile(repositoryId, fileId, approverId);
+        int approvalId = remoteServer.approve(repositoryId, fileId, approverId);
         return approvalId;
     }
 }

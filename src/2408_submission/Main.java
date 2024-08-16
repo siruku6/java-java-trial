@@ -9,7 +9,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("---------------- Initialization ---------------");
         String hostName = "10.2.22.4";
-        RemoteServer remoteServer = new RemoteServer(hostName);
+        RemoteServer remoteServer = RemoteServer.init(hostName);
+        RemoteServer failedRemoteServer = RemoteServer.init(hostName);
         Workplace shinagawa = new Workplace();
 
         System.out.println("\n---------------- Leader(1) David makes a repository. ---------------");

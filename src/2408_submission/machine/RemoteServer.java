@@ -8,20 +8,30 @@ import repository.File;
 
 
 public class RemoteServer implements Machine {
-    private static Integer serverIdCounter = 1;
+    private static Integer serverIdCounter = 0;
+    private static RemoteServer instance;
     private Integer serverId;
     public String hostName;
     private Boolean powerOn;
     private List<Repository> repositories;
 
-    public RemoteServer(String hostName) {
-        this.serverId = serverIdCounter;
+    private RemoteServer(String hostName) {
         serverIdCounter += 1;
-
+        this.serverId = serverIdCounter;
         this.powerOn = false;
         this.hostName = hostName;
         this.repositories = new java.util.ArrayList<Repository>();
         this.turnOn();
+    }
+
+    // Singleton
+    public static RemoteServer init(String hostName) {
+        if (serverIdCounter > 0) {
+            System.out.println("Remote server is already initialized!");
+            return instance;
+        }
+        instance = new RemoteServer(hostName);
+        return instance;
     }
 
     @Override

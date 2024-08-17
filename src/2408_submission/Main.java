@@ -121,5 +121,26 @@ public class Main {
 
         // Try to approve the file which is not in the remote repository.
         cachy.approve(remoteServer, repositoryId, "dummy_file_id");
+
+        cachy.quitWorkplace();
+        edgardo.quitWorkplace();
+
+        System.out.println("\n---------------- Leader(6) create, push, delete, apprpve, and pull the files. ---------------");
+        Leader fatimah = new Leader(shinagawa, "fatimah");
+        fatimah.pullRepository(remoteServer, repositoryId);
+
+        // Check existence of the created file.
+        String fatimahFileId = fatimah.createFile(repositoryId, "[Fair Copy] اصفهان...");
+        fatimah.computer.showFileHistory(repositoryId);
+
+        // Check the existence of the deleted file.
+        fatimah.push(remoteServer, repositoryId, fatimahFileId);
+        fatimah.delete(repositoryId, fatimahFileId);
+        fatimah.computer.showFileHistory(repositoryId);
+
+        // Check the existence locally deleted but pulled from remote.
+        fatimah.approve(remoteServer, repositoryId, fatimahFileId);
+        fatimah.pullRepository(remoteServer, repositoryId);
+        fatimah.computer.showFileHistory(repositoryId);
     }
 }

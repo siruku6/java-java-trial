@@ -124,7 +124,7 @@ public class Computer implements Machine {
             throw new RuntimeException("Files can't be viewed.");
         }
 
-        System.out.println("On the computer: " + this.computerId);
+        System.out.println("Computer (" + this.computerId + ")'s File History:");
         repository.showFileHistory();
     }
 

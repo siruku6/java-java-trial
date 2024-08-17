@@ -57,6 +57,7 @@ public class Repository {
 
             System.out.println(
                 "  " + fileCounter+ "(" + file.getStatus() + "): " + file.getContent()
+                + " (author: " + file.getAuthorId() + ")"
             );
         }
     }

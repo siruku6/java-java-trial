@@ -96,13 +96,23 @@ public class Repository {
     public void removeFile(File file) {
         if (file.getStatus().equals(File.APPROVED)) {
             file.updateStatus(File.LOGICAL_DELETED);
+        } else if (file.getStatus().equals(File.LOGICAL_DELETED)) {
+            System.out.println("The File has already been logically deleted.");
+            return;
         } else {
             this.files.remove(file);
         }
+        System.out.println("File (" + file.getFileId() + ") is deleted.");
+    }
+
+    // Overload
+    public void removeFile(File file, boolean force) {
+        this.files.remove(file);
+        System.out.println("File (" + file.getFileId() + ") is deleted.");
     }
 
     private void replaceFile(File oldFile, File newFile) {
-        this.removeFile(oldFile);
+        this.removeFile(oldFile, true);
         this.files.add(newFile);
     }
 
@@ -121,6 +131,10 @@ public class Repository {
 
     public int approve(String fileId, int approverId) {
         File file = this.findFile(fileId);
+        if (Objects.isNull(file)) {
+            System.out.println("[WARN] The File you are going to approve doesn't exist in the remote repository.");
+            return -1;
+        }
 
         // Behavior differs depending on the status of the file.
         String previousStatus = file.getStatus();
@@ -131,7 +145,8 @@ public class Repository {
         } else if (previousStatus.equals(File.LOGICAL_DELETED)) {
             nextStatus = File.DELETION_APPROVED;
         } else {
-            throw new RuntimeException("File can't be approved.");
+            System.out.println("[WARN] The File can't be approved. Current status: " + previousStatus);
+            return -1;
         }
         file.updateStatus(nextStatus);
 
@@ -139,6 +154,7 @@ public class Repository {
             approverId, file.getAuthorId(), fileId, previousStatus
         );
         this.approvalHistories.add(approvalHistory);
+        System.out.println("File (" + fileId + ") is successfully approved.");
 
         return approvalHistory.getHistoryId();
     }

@@ -12,7 +12,7 @@ public class Engineer extends Person {
     public int approve(
         RemoteServer remoteServer, Integer repositoryId, String fileId
     ) {
-        System.out.println("You don't have permission to approve files.");
+        System.out.println("[WARN] You don't have permission to approve files.");
 
         return -1;
     };

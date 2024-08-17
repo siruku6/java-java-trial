@@ -52,7 +52,6 @@ public abstract class Person {
 
     public void delete(Integer repositoryId, String fileId) {
         this.computer.delete(repositoryId, fileId);
-        System.out.println("File (" + fileId + ") is deleted.");
     }
 
     public void push(RemoteServer remoteServer, Integer repositoryId, String fileId) {

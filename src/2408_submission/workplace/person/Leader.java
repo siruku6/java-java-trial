@@ -19,7 +19,6 @@ public class Leader extends Person {
         int approvalId = this.computer.approve(
             remoteServer, repositoryId, fileId, this.personId
         );
-        System.out.println("File (" + fileId + ") is successfully approved.");
         return approvalId;
     }
 

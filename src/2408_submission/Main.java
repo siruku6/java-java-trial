@@ -97,5 +97,29 @@ public class Main {
         // After approval and pulling, other person can confirm the deletion of file is approved.
         daniel.pullRepository(remoteServer, repositoryId);
         daniel.computer.showFileHistory(repositoryId);
+        daniel.quitWorkplace();
+
+        System.out.println("\n---------------- Worker(6) and Leader(4) try to execute invalid processings. ---------------");
+        Engineer edgardo = new Engineer(shinagawa, "edgardo");
+        edgardo.pullRepository(remoteServer, repositoryId);
+
+        // Try approve as an Engineer
+        edgardo.approve(remoteServer, repositoryId, amyFileId);
+
+        // try to push the file to a repository which doesn't exist.
+        edgardo.push(remoteServer, -1, amyFileId);
+
+        // Try to push the file which is not in the local repository.
+        edgardo.push(remoteServer, repositoryId, "dummy_file_id");
+
+        // Try to delete the file which is already deleted.
+        edgardo.delete(repositoryId, amyFileId);
+        edgardo.delete(repositoryId, amyFileId);
+
+        // Try to approve the file which is already approved.
+        cachy.approve(remoteServer, repositoryId, amyFileId);
+
+        // Try to approve the file which is not in the remote repository.
+        cachy.approve(remoteServer, repositoryId, "dummy_file_id");
     }
 }

@@ -148,6 +148,10 @@ public class Computer implements Machine {
         }
 
         File file = repository.findFile(fileId);
+        if (Objects.isNull(file)) {
+            System.out.println("[WARN] The File you are going to delete can't be found.");
+            return;
+        }
         repository.removeFile(file);
     }
 
@@ -156,10 +160,15 @@ public class Computer implements Machine {
 
         Repository repository = findRepository(repositoryId);
         if (Objects.isNull(repository)) {
-            throw new RuntimeException("File can't be pushed.");
+            System.out.println("[WARN] The Repository can't be found.");
+            return;
         }
 
         File file = repository.findFile(fileId);
+        if (Objects.isNull(file)) {
+            System.out.println("[WARN] The File you are going to push can't be found.");
+            return;
+        }
         remoteServer.push(repositoryId, file.clone());
     }
 

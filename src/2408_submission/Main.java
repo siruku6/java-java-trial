@@ -84,17 +84,17 @@ public class Main {
         // Daniel push the deletion of the file to the remote server.
         daniel.push(remoteServer, repositoryId, amyFileId);
 
+        // After pulling, she can confirm the file is logically deleted.
+        cachy.pullRepository(remoteServer, repositoryId);
+        cachy.computer.showFileHistory(repositoryId);
+
         // Approve the deletion of the file.
         cachy.approve(remoteServer, repositoryId, amyFileId);
 
         // She can still see the logically deleted file.
         cachy.computer.showFileHistory(repositoryId);
 
-        // After approval and pulling, she can confirm the file is deleted.
-        cachy.pullRepository(remoteServer, repositoryId);
-        cachy.computer.showFileHistory(repositoryId);
-
-        // After approval and pulling, other person can confirm the deletion of file is approved.
+        // After approval and pulling, even other person can confirm the deletion of file is approved.
         daniel.pullRepository(remoteServer, repositoryId);
         daniel.computer.showFileHistory(repositoryId);
         daniel.quitWorkplace();

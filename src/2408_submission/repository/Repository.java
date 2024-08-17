@@ -74,7 +74,11 @@ public class Repository {
             cloneRepo.files = cloneRepo
                 .getFiles()
                 .stream()
-                .filter(f -> (f.getStatus().equals(File.APPROVED)) || (f.getStatus().equals(File.DELETION_APPROVED)))
+                .filter(
+                    f -> (f.getStatus().equals(File.APPROVED))
+                    || (f.getStatus().equals(File.LOGICAL_DELETED))
+                    || (f.getStatus().equals(File.DELETION_APPROVED))
+                )
                 .collect(Collectors.toList());
         }
         return cloneRepo;

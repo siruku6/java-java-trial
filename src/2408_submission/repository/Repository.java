@@ -4,12 +4,12 @@ import java.util.Objects;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import repository.File;
 import repository.ApprovalHistory;
 
 
 public class Repository {
     private static int repositoryIdCounter = 0;
-    public static List<Repository> createdRepositories;
 
     private int repositoryId;
     private List<File> files;
@@ -33,7 +33,7 @@ public class Repository {
     public File findFile(String fileId) {
         File foundFile = this.files
             .stream()
-            .filter(f -> f.fileId.equals(fileId))
+            .filter(f -> f.getFileId().equals(fileId))
             .findFirst()
             .orElse(null);
 
@@ -46,8 +46,8 @@ public class Repository {
         // Omit logical_deleted files from the list
         List<File> existFiles = this.files
             .stream()
-            .filter(f -> !f.status.equals("logical_deleted"))
-            .filter(f -> !f.status.equals("deletion_approved"))
+            .filter(f -> !f.getStatus().equals(File.LOGICAL_DELETED))
+            .filter(f -> !f.getStatus().equals(File.DELETION_APPROVED))
             .collect(Collectors.toList());
 
         // Display the number of files at first.
@@ -56,7 +56,8 @@ public class Repository {
             fileCounter++;
 
             System.out.println(
-                "  " + fileCounter+ "(" + file.status + "): " + file.content
+                "  " + fileCounter+ "(" + file.getStatus() + "): " + file.getContent()
+                + " (author: " + file.getAuthorId() + ")"
             );
         }
     }
@@ -73,14 +74,18 @@ public class Repository {
             cloneRepo.files = cloneRepo
                 .getFiles()
                 .stream()
-                .filter(f -> (f.status.equals("approved")) || (f.status.equals("deletion_approved")))
+                .filter(
+                    f -> (f.getStatus().equals(File.APPROVED))
+                    || (f.getStatus().equals(File.LOGICAL_DELETED))
+                    || (f.getStatus().equals(File.DELETION_APPROVED))
+                )
                 .collect(Collectors.toList());
         }
         return cloneRepo;
     }
 
-    public void pushFile(File pushedFile) {
-        File existingFile = this.findFile(pushedFile.fileId);
+    public void push(File pushedFile) {
+        File existingFile = this.findFile(pushedFile.getFileId());
 
         if (Objects.isNull(existingFile)) {
             this.addFile(pushedFile);
@@ -94,23 +99,33 @@ public class Repository {
     }
 
     public void removeFile(File file) {
-        if (file.status.equals("approved")) {
-            file.updateStatus("logical_deleted");
+        if (file.getStatus().equals(File.APPROVED)) {
+            file.updateStatus(File.LOGICAL_DELETED);
+        } else if (file.getStatus().equals(File.LOGICAL_DELETED)) {
+            System.out.println("The File has already been logically deleted.");
+            return;
         } else {
             this.files.remove(file);
         }
+        System.out.println("File (" + file.getFileId() + ") is deleted.");
+    }
+
+    // Overload
+    public void removeFile(File file, boolean force) {
+        this.files.remove(file);
+        System.out.println("File (" + file.getFileId() + ") is deleted.");
     }
 
     private void replaceFile(File oldFile, File newFile) {
-        this.removeFile(oldFile);
+        this.removeFile(oldFile, true);
         this.files.add(newFile);
     }
 
     public void merge(Repository anotherRepository) {
         for (File file : anotherRepository.files) {
             // If there is a file having the same fileId, overwrite it with the file from anotherRepository 
-            if (this.files.stream().anyMatch(f -> f.fileId.equals(file.fileId))) {
-                this.files.removeIf(f -> f.fileId.equals(file.fileId));
+            if (this.files.stream().anyMatch(f -> f.getFileId().equals(file.getFileId()))) {
+                this.files.removeIf(f -> f.getFileId().equals(file.getFileId()));
                 this.files.add(file);
             // Otherwise, add the file to this repository.
             } else {
@@ -121,24 +136,30 @@ public class Repository {
 
     public int approve(String fileId, int approverId) {
         File file = this.findFile(fileId);
+        if (Objects.isNull(file)) {
+            System.out.println("[WARN] The File you are going to approve doesn't exist in the remote repository.");
+            return -1;
+        }
 
         // Behavior differs depending on the status of the file.
-        String previousStatus = file.status;
+        String previousStatus = file.getStatus();
         String nextStatus = "";
 
-        if (previousStatus.equals("created")) {
-            nextStatus = "approved";
-        } else if (previousStatus.equals("logical_deleted")) {
-            nextStatus = "deletion_approved";
+        if (previousStatus.equals(File.CREATED)) {
+            nextStatus = File.APPROVED;
+        } else if (previousStatus.equals(File.LOGICAL_DELETED)) {
+            nextStatus = File.DELETION_APPROVED;
         } else {
-            throw new RuntimeException("File can't be approved.");
+            System.out.println("[WARN] The File can't be approved. Current status: " + previousStatus);
+            return -1;
         }
         file.updateStatus(nextStatus);
 
         ApprovalHistory approvalHistory = new ApprovalHistory(
-            approverId, file.authorId, fileId, previousStatus
+            approverId, file.getAuthorId(), fileId, previousStatus
         );
         this.approvalHistories.add(approvalHistory);
+        System.out.println("File (" + fileId + ") is successfully approved.");
 
         return approvalHistory.getHistoryId();
     }

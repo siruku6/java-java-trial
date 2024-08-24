@@ -83,7 +83,7 @@ public class Computer implements Machine {
     public void pullRepository(RemoteServer remoteServer, Integer repositoryId) {
         this.checkPowerOn();
 
-        Repository remoteRepository = remoteServer.returnRepository(repositoryId);
+        Repository remoteRepository = remoteServer.pullRepository(repositoryId);
         if (Objects.isNull(remoteRepository)) {
             throw new RuntimeException(
                 "Repository (" + repositoryId + ") couldn't be pulled! "
@@ -124,7 +124,7 @@ public class Computer implements Machine {
             throw new RuntimeException("Files can't be viewed.");
         }
 
-        System.out.println("On the computer: " + this.computerId);
+        System.out.println("Computer (" + this.computerId + ")'s File History:");
         repository.showFileHistory();
     }
 
@@ -137,10 +137,10 @@ public class Computer implements Machine {
 
         File file = new File(personId, content);
         repository.addFile(file);
-        return file.fileId;
+        return file.getFileId();
     }
 
-    public void deleteFile(Integer repositoryId, String fileId) {
+    public void delete(Integer repositoryId, String fileId) {
         this.checkPowerOn();
         Repository repository = findRepository(repositoryId);
         if (Objects.isNull(repository)) {
@@ -148,27 +148,36 @@ public class Computer implements Machine {
         }
 
         File file = repository.findFile(fileId);
+        if (Objects.isNull(file)) {
+            System.out.println("[WARN] The File you are going to delete can't be found.");
+            return;
+        }
         repository.removeFile(file);
     }
 
-    public void pushFile(RemoteServer remoteServer, Integer repositoryId, String fileId) {
+    public void push(RemoteServer remoteServer, Integer repositoryId, String fileId) {
         this.checkPowerOn();
 
         Repository repository = findRepository(repositoryId);
         if (Objects.isNull(repository)) {
-            throw new RuntimeException("File can't be pushed.");
+            System.out.println("[WARN] The Repository can't be found.");
+            return;
         }
 
         File file = repository.findFile(fileId);
-        remoteServer.pushFile(repositoryId, file.clone());
+        if (Objects.isNull(file)) {
+            System.out.println("[WARN] The File you are going to push can't be found.");
+            return;
+        }
+        remoteServer.push(repositoryId, file.clone());
     }
 
-    public int approveFile(
+    public int approve(
         RemoteServer remoteServer, Integer repositoryId, String fileId, Integer approverId
     ) {
         this.checkPowerOn();
 
-        int approvalId = remoteServer.approveFile(repositoryId, fileId, approverId);
+        int approvalId = remoteServer.approve(repositoryId, fileId, approverId);
         return approvalId;
     }
 }

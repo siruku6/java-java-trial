@@ -11,10 +11,16 @@ import java.nio.charset.StandardCharsets;
 
 
 public class File {
-    public String fileId;
-    public int authorId;
-    public String content;
-    public String status = "not_exist";
+    public static final String NOT_EXIST = "not_exist";
+    public static final String CREATED = "created";
+    public static final String APPROVED = "approved";
+    public static final String LOGICAL_DELETED = "logical_deleted";
+    public static final String DELETION_APPROVED = "deletion_approved";
+
+    private String fileId;
+    private int authorId;
+    private String content;
+    private String status = NOT_EXIST;
 
     private String generateNewFileId() {
 
@@ -42,7 +48,7 @@ public class File {
         this.fileId = this.generateNewFileId();
         this.authorId = authorId;
         this.content = content;
-        this.status = "created";
+        this.status = CREATED;
     }
 
     public File(String id, int authorId, String content, String status) {
@@ -52,10 +58,26 @@ public class File {
         this.status = status;
     }
 
+    public String getFileId() {
+        return this.fileId;
+    }
+
+    public int getAuthorId() {
+        return this.authorId;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
     public void updateStatus(String newStatus) {
         // validate newStatus
         List<String> validStatuses = Arrays.asList(
-            "created", "approved", "logical_deleted", "deletion_approved"
+            CREATED, APPROVED, LOGICAL_DELETED, DELETION_APPROVED
         );
         if (!validStatuses.contains(newStatus)) {
             throw new IllegalArgumentException("Invalid status: " + newStatus);
@@ -69,7 +91,7 @@ public class File {
         try {
             file = (File) super.clone();
         } catch (CloneNotSupportedException e) {
-            file = new File(this.fileId, this.authorId, this.content, this.status);
+            file = new File(this.getFileId(), this.getAuthorId(), this.getContent(), this.getStatus());
         }
         return file;
     }

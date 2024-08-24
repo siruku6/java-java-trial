@@ -9,7 +9,6 @@ import machine.Computer;
 public class Workplace {
     private Integer workplaceId;
     private List<Person> people;
-    private List<Computer> computers;
 
     public Workplace() {
         // Set workplaceId

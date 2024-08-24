@@ -25,7 +25,4 @@ public class ApprovalHistory {
     public int getHistoryId() {
         return this.historyId;
     }
-
-    public void showHistory() {
-    }
 }

@@ -8,20 +8,30 @@ import repository.File;
 
 
 public class RemoteServer implements Machine {
-    private static Integer serverIdCounter = 1;
+    private static Integer serverIdCounter = 0;
+    private static RemoteServer instance;
     private Integer serverId;
     public String hostName;
     private Boolean powerOn;
     private List<Repository> repositories;
 
-    public RemoteServer(String hostName) {
-        this.serverId = serverIdCounter;
+    private RemoteServer(String hostName) {
         serverIdCounter += 1;
-
+        this.serverId = serverIdCounter;
         this.powerOn = false;
         this.hostName = hostName;
         this.repositories = new java.util.ArrayList<Repository>();
         this.turnOn();
+    }
+
+    // Singleton
+    public static RemoteServer init(String hostName) {
+        if (serverIdCounter > 0) {
+            System.out.println("Remote server is already initialized!");
+            return instance;
+        }
+        instance = new RemoteServer(hostName);
+        return instance;
     }
 
     @Override
@@ -59,14 +69,14 @@ public class RemoteServer implements Machine {
         this.checkPowerOn();
     }
 
-    public void pushFile(Integer repositoryId, File clonedFile) {
+    public void push(Integer repositoryId, File clonedFile) {
         this.checkPowerOn();
 
         Repository repository = this.findRepository(repositoryId);
-        repository.pushFile(clonedFile);
+        repository.push(clonedFile);
 
         System.out.println(
-            "File (" + clonedFile.fileId + ") is successfully pushed to Repository (" + repositoryId + ")"
+            "File (" + clonedFile.getFileId() + ") is successfully pushed to Repository (" + repositoryId + ")"
         );
     }
 
@@ -78,7 +88,7 @@ public class RemoteServer implements Machine {
         );
     }
 
-    public Repository returnRepository(Integer repositoryId) {
+    public Repository pullRepository(Integer repositoryId) {
         this.checkPowerOn();
         if (!this.powerOn) {
             System.out.println("Remote server is not started.");
@@ -99,7 +109,7 @@ public class RemoteServer implements Machine {
         return clonedRepository;
     }
 
-    public int approveFile(
+    public int approve(
         Integer repositoryId, String fileId, Integer approverId
     ) {
         this.checkPowerOn();
